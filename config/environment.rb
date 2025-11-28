@@ -5,6 +5,13 @@ require 'dotenv/load'
 
 require 'sinatra/base'
 require 'json'
+require 'active_record'
+require 'yaml'
+
+# Configure ActiveRecord
+db_config = YAML.load_file(File.join(__dir__, 'database.yml'))
+environment = ENV['RACK_ENV'] || 'development'
+ActiveRecord::Base.establish_connection(db_config[environment])
 
 # Require all application files
 Dir[File.join(__dir__, '../app/helpers', '*.rb')].each { |file| require file }

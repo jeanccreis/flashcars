@@ -7,3 +7,8 @@ gem "dotenv"
 
 gem "rackup", "~> 2.2"
 gem "puma", "~> 7.1"
+
+# Database
+gem "sqlite3", "~> 1.7"
+gem "activerecord", "~> 7.1"
+gem "rake"
