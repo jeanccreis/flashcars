@@ -1,6 +1,8 @@
 require 'bundler/setup'
 Bundler.require(:default, ENV['RACK_ENV'] || :development)
 
+require 'dotenv/load'
+
 require 'sinatra/base'
 require 'json'
 
