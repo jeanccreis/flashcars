@@ -12,3 +12,6 @@ gem "puma", "~> 7.1"
 gem "sqlite3", "~> 1.7"
 gem "activerecord", "~> 7.1"
 gem "rake"
+
+# Rate limiting
+gem "rack-attack"

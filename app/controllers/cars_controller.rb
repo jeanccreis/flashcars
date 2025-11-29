@@ -4,6 +4,11 @@ class Application < Sinatra::Base
     authenticate_with_api_key!
   end
 
+  # Add rate limit headers to all API responses
+  after '/api/v1/*' do
+    add_rate_limit_headers
+  end
+
   # GET /api/v1/cars - List all cars
   get '/api/v1/cars' do
     cars = Car.all

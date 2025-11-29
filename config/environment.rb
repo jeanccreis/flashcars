@@ -6,6 +6,8 @@ require 'dotenv/load'
 require 'sinatra/base'
 require 'json'
 require 'active_record'
+require 'active_support/cache'
+require 'active_support/core_ext/numeric/time'
 require 'yaml'
 
 # Configure ActiveRecord
@@ -49,8 +51,9 @@ class Application < Sinatra::Base
     end
   end
 
-  # Include authentication helper
+  # Include helpers
   helpers AuthenticationHelper
+  helpers RateLimitHelper
 
   # Health check endpoint
   get '/health' do
