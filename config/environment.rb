@@ -38,11 +38,37 @@ class Application < Sinatra::Base
       content_type :json
       halt status, data.to_json
     end
+
+    def parse_json_body
+      body = request.body.read
+      request.body.rewind rescue nil
+      return {} if body.nil? || body.empty?
+      JSON.parse(body)
+    rescue JSON::ParserError => e
+      halt 400, json_response({ error: 'Invalid JSON format', details: e.message }, 400)
+    end
   end
+
+  # Include authentication helper
+  helpers AuthenticationHelper
 
   # Health check endpoint
   get '/health' do
     json_response({ status: 'ok', timestamp: Time.now.to_i })
+  end
+
+  # JSON parsing error handler
+  error JSON::ParserError do
+    json_response({ error: 'Invalid JSON format in request body' }, 400)
+  end
+
+  # ActiveRecord errors
+  error ActiveRecord::RecordNotFound do
+    json_response({ error: 'Record not found' }, 404)
+  end
+
+  error ActiveRecord::RecordInvalid do |e|
+    json_response({ error: 'Validation failed', details: e.record.errors.full_messages }, 422)
   end
 
   # 404 handler
@@ -50,7 +76,7 @@ class Application < Sinatra::Base
     json_response({ error: 'Not found' }, 404)
   end
 
-  # Error handler
+  # Generic error handler
   error do
     json_response({ error: 'Internal server error' }, 500)
   end
